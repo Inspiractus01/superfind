@@ -1,0 +1,28 @@
+{
+  "name": "superfind",
+  "displayName": "SuperFind",
+  "publisher": "inspiractus",
+  "description": "One search box for files, symbols (classes/functions + their usages), folders, and code content — like JetBrains' Search Everywhere.",
+  "version": "0.0.1",
+  "engines": { "vscode": "^1.75.0" },
+  "activationEvents": ["onStartupFinished"],
+  "main": "./extension.js",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/Inspiractus01/superfind" },
+  "categories": ["Other"],
+  "contributes": {
+    "commands": [
+      {
+        "command": "superfind.open",
+        "title": "SuperFind: Search Files, Symbols, Usages & Folders"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "superfind.open",
+        "key": "alt+f",
+        "mac": "cmd+alt+f"
+      }
+    ]
+  }
+}
