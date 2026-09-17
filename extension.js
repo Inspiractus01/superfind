@@ -1,5 +1,6 @@
 const vscode = require('vscode');
 const fs = require('fs');
+const styles = require('./styles');
 
 const EXCLUDE = '**/{node_modules,graft,.next,dist,build,.git}/**';
 const BINARY_EXT = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'ico', 'svg', 'woff', 'woff2', 'ttf', 'eot', 'pdf', 'zip', 'lock']);
@@ -118,6 +119,8 @@ async function search(query) {
     }
   }
 
+  items.push(...(await styles.searchStyles(query, fuzzyScore, fileCache)));
+
   if (fileCache) {
     const scoredFiles = [];
     for (const f of fileCache) {
@@ -190,7 +193,7 @@ function searchContent(query) {
 
 function openSuperFind() {
   const qp = vscode.window.createQuickPick();
-  qp.placeholder = 'Search files, symbols (classes/functions), and folders…';
+  qp.placeholder = 'Search files, symbols, styles (.class, @mixin, $var), and folders…';
   qp.matchOnDescription = false;
   qp.matchOnDetail = false;
 
@@ -251,15 +254,18 @@ function openSuperFind() {
 
 function activate(context) {
   buildFileFolderCache();
+  styles.buildStyleIndex(EXCLUDE);
 
   const watcher = vscode.workspace.createFileSystemWatcher('**/*');
   let rebuildTimer;
-  const scheduleRebuild = () => {
+  const scheduleRebuild = (uri) => {
+    styles.invalidate(uri);
     clearTimeout(rebuildTimer);
     rebuildTimer = setTimeout(buildFileFolderCache, 500);
   };
   watcher.onDidCreate(scheduleRebuild);
   watcher.onDidDelete(scheduleRebuild);
+  watcher.onDidChange(styles.invalidate);
 
   context.subscriptions.push(watcher, vscode.commands.registerCommand('superfind.open', openSuperFind));
 }

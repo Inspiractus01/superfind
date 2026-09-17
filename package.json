@@ -3,7 +3,7 @@
   "displayName": "SuperFind",
   "publisher": "inspiractus",
   "description": "One search box for files, symbols (classes/functions + their usages), folders, and code content — like JetBrains' Search Everywhere.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": { "vscode": "^1.75.0" },
   "activationEvents": ["onStartupFinished"],
   "main": "./extension.js",
